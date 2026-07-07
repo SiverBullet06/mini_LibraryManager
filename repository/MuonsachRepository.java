@@ -7,14 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-//================================================================
-//
-//
-//
-//
-//
-//
-//=================================================================
 @Repository
 public class MuonsachRepository {
     
@@ -39,15 +31,41 @@ public class MuonsachRepository {
         }
         return listMS ;
     }
-    public List<MuonSach> getMuonSach_ByMaDG_MaSH ( Connection conn  ,  String madg , String mash  ) throws SQLException {
+
+    public int updateMuonsach (Connection conn , String madg , String mash
+    , Date ngtra , String quahan ) throws SQLException {
+        String sql = "UPDATE FROM MUONSACH " +
+                "SET NGAYTRA = ? ," +
+                "QUAHAN = ? " +
+                "WHERE MADG = ? " +
+                "AND MASH = ? " ;
+        PreparedStatement ps = conn.prepareStatement(sql ) ;
+        ps.setDate(1,ngtra);
+        ps.setString(2,quahan);
+        ps.setString(3,madg);
+        ps.setString(4,mash);
+
+        return ps.executeUpdate() ;
+    }
+
+    public int deleteMuonsach ( Connection conn , String madg , String mash ) throws SQLException {
+        String sql = "DELETE FROM MUONSACH " +
+                "WHERE MADG = ? " +
+                "AND MASH = ? ";
+        PreparedStatement ps = conn.prepareStatement(sql) ;
+        ps.setString(1,madg);
+        ps.setString(2,mash);
+        return ps.executeUpdate() ;
+    }
+     public List<MuonSach> getMuonSach_ByMaDG_MaSH ( Connection conn  ,  String madg , String mash  ) throws SQLException {
         String sql = "SELECT * " +
-                "FROM MuonSach " +
+               "FROM MuonSach " +
                 "WHERE MADG =?" +
                 " AND MASH = ? " ;
         PreparedStatement ps = conn.prepareStatement(sql ) ;
         ps.setString(1,madg);
         ps.setString(2,mash);
-        try ( ResultSet rs = ps.executeQuery() ) {
+         try ( ResultSet rs = ps.executeQuery() ) {
             while ( rs.next()) {
                 MuonSach ms = new MuonSach( ) ;
                 ms.setFk_Madg(rs.getString("MADG"));
@@ -105,11 +123,12 @@ public class MuonsachRepository {
                             "\tNgay muon : %s " +
                             "\tNgay tra : %s " +
                             "\tQua han : %s%n",
-                    ms.getFk_Madg() ,
-                    ms.getFk_Msach() , ms.getNgayMuon() , ms.getNgayTra(),
+                    ms.getFk_Madg(),
+                    ms.getFk_Msach(), ms.getNgayMuon(), ms.getNgayTra(),
                     ms.getQuaHan()
             );
         }
     }
+
 
 }

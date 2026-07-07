@@ -30,123 +30,123 @@ public class SachRepository {
         }
         return listSach ;
     }
-    public Sach getOneSach (Connection conn ,  String masach ) throws SQLException {
-        String sql = " SELECT *" +
-                " FROM SACH " +
-                "WHERE MASH = ?" ;
-        PreparedStatement ps = conn.prepareStatement(sql ) ;
-        ps.setString(1,masach);
-        try(ResultSet rs = ps.executeQuery()) {
-            if (rs.next()){
-                Sach s = new Sach() ;
-                s.setMaSH(rs.getString("MASACH"));
-                s.setTenSH(rs.getString("TENSH"));
-                s.setTacGia(rs.getString("TACGIA"));
-                s.setLoai(rs.getString("LOAI"));
-                s.setTinhTrang(rs.getString("TINHTRANG"));
-                return s ;
-            }
-        }
-        return null ;
-    }
+//    public Sach getOneSach (Connection conn ,  String masach ) throws SQLException {
+//        String sql = " SELECT *" +
+//                " FROM SACH " +
+//                "WHERE MASH = ?" ;
+//        PreparedStatement ps = conn.prepareStatement(sql ) ;
+//        ps.setString(1,masach);
+//        try(ResultSet rs = ps.executeQuery()) {
+//            if (rs.next()){
+//                Sach s = new Sach() ;
+//                s.setMaSH(rs.getString("MASACH"));
+//                s.setTenSH(rs.getString("TENSH"));
+//                s.setTacGia(rs.getString("TACGIA"));
+//                s.setLoai(rs.getString("LOAI"));
+//                s.setTinhTrang(rs.getString("TINHTRANG"));
+//                return s ;
+//            }
+//        }
+//        return null ;
+//    }
 
-    public List<Sach> getListsSach_ByType( Connection conn , String loai ) throws  SQLException {
-        String sql = " SELECT * " +
-                "FROM SACH" +
-                "WHERE LOAI = ? " ;
-        PreparedStatement ps = conn.prepareStatement(sql ) ;
+//    public List<Sach> getListsSach_ByType( Connection conn , String loai ) throws  SQLException {
+//        String sql = " SELECT * " +
+//                "FROM SACH" +
+//                "WHERE LOAI = ? " ;
+//        PreparedStatement ps = conn.prepareStatement(sql ) ;
+//
+//        ps.setString(1,loai);
+//        try ( ResultSet rs = ps.executeQuery() ) {
+//            while ( rs.next() ) {
+//                Sach s = new Sach( ) ;
+//                s.setMaSH(rs.getString("MASACH"));
+//                s.setTenSH(rs.getString("TENSH"));
+//                s.setTacGia(rs.getString("TACGIA"));
+//                s.setLoai(rs.getString("LOAI"));
+//                s.setTinhTrang(rs.getString("TINHTRANG"));
+//                listSach.add(s) ;
+//            }
+//        }
+//        return listSach;
+//    }
 
-        ps.setString(1,loai);
-        try ( ResultSet rs = ps.executeQuery() ) {
-            while ( rs.next() ) {
-                Sach s = new Sach( ) ;
-                s.setMaSH(rs.getString("MASACH"));
-                s.setTenSH(rs.getString("TENSH"));
-                s.setTacGia(rs.getString("TACGIA"));
-                s.setLoai(rs.getString("LOAI"));
-                s.setTinhTrang(rs.getString("TINHTRANG"));
-                listSach.add(s) ;
-            }
-        }
-        return listSach;
-    }
+//    public boolean checkExists_Masach ( Connection conn , String masach ) throws  SQLException {
+//        boolean check = false ;
+//        String sql = " SELECT 1 " +
+//                "FROM Sach" +
+//                "WHERE MASH = ? " ;
+//        PreparedStatement ps = conn.prepareStatement(sql) ;
+//        ps.setString(1,masach );
+//        try ( ResultSet rs = ps.executeQuery()) {
+//            if ( rs.next()) {
+//                check = true;
+//                System.out.println(" Ton tai ma doc sach trong du lieu ");
+//            }
+//        }
+//        return check ;
+//    }
 
-    public boolean checkExists_Masach ( Connection conn , String masach ) throws  SQLException {
-        boolean check = false ;
-        String sql = " SELECT 1 " +
-                "FROM Sach" +
-                "WHERE MASH = ? " ;
-        PreparedStatement ps = conn.prepareStatement(sql) ;
-        ps.setString(1,masach );
-        try ( ResultSet rs = ps.executeQuery()) {
-            if ( rs.next()) {
-                check = true;
-                System.out.println(" Ton tai ma doc sach trong du lieu ");
-            }
-        }
-        return check ;
-    }
+//    public List<Sach> getListsSach_ByAuthor( Connection conn , String author ) throws  SQLException {
+//        String sql = " SELECT * " +
+//                "FROM SACH" +
+//                "WHERE TACGIA = ? " ;
+//        PreparedStatement ps = conn.prepareStatement(sql ) ;
+//        ps.setString(1,author);
+//        try ( ResultSet rs = ps.executeQuery() ) {
+//            while ( rs.next() ) {
+//                Sach s = new Sach( ) ;
+//                s.setMaSH(rs.getString("MASACH"));
+//                s.setTenSH(rs.getString("TENSH"));
+//                s.setTacGia(rs.getString("TACGIA"));
+//                s.setLoai(rs.getString("LOAI"));
+//                s.setTinhTrang(rs.getString("TINHTRANG"));
+//                listSach.add(s) ;
+//            }
+//        }
+//        return listSach;
+//    }
 
-    public List<Sach> getListsSach_ByAuthor( Connection conn , String author ) throws  SQLException {
-        String sql = " SELECT * " +
-                "FROM SACH" +
-                "WHERE TACGIA = ? " ;
-        PreparedStatement ps = conn.prepareStatement(sql ) ;
-        ps.setString(1,author);
-        try ( ResultSet rs = ps.executeQuery() ) {
-            while ( rs.next() ) {
-                Sach s = new Sach( ) ;
-                s.setMaSH(rs.getString("MASACH"));
-                s.setTenSH(rs.getString("TENSH"));
-                s.setTacGia(rs.getString("TACGIA"));
-                s.setLoai(rs.getString("LOAI"));
-                s.setTinhTrang(rs.getString("TINHTRANG"));
-                listSach.add(s) ;
-            }
-        }
-        return listSach;
-    }
+//    public List<Sach> getListsSach_ByBookName( Connection conn , String bookName ) throws  SQLException {
+//        String sql = " SELECT * " +
+//                "FROM SACH" +
+//                "WHERE TENSH = ? " ;
+//        PreparedStatement ps = conn.prepareStatement(sql ) ;
+//        ps.setString(1,bookName);
+//        try ( ResultSet rs = ps.executeQuery() ) {
+//            while ( rs.next() ) {
+//                Sach s = new Sach( ) ;
+//                s.setMaSH(rs.getString("MASACH"));
+//                s.setTenSH(rs.getString("TENSH"));
+//                s.setTacGia(rs.getString("TACGIA"));
+//                s.setLoai(rs.getString("LOAI"));
+//                s.setTinhTrang(rs.getString("TINHTRANG"));
+//                listSach.add(s) ;
+//            }
+//        }
+//        return listSach;
+//    }
+//    public List<Sach> getListsSach_ByStatus( Connection conn , String status ) throws  SQLException {
+//        String sql = " SELECT * " +
+//                "FROM SACH" +
+//                "WHERE TACGIA = ? " ;
+//        PreparedStatement ps = conn.prepareStatement(sql ) ;
+//        ps.setString(1,status);
+//        try ( ResultSet rs = ps.executeQuery() ) {
+//            while ( rs.next() ) {
+//                Sach s = new Sach( ) ;
+//                s.setMaSH(rs.getString("MASACH"));
+//                s.setTenSH(rs.getString("TENSH"));
+//                s.setTacGia(rs.getString("TACGIA"));
+//                s.setLoai(rs.getString("LOAI"));
+//                s.setTinhTrang(rs.getString("TINHTRANG"));
+//                listSach.add(s) ;
+//            }
+//        }
+//        return listSach;
+//    }
 
-    public List<Sach> getListsSach_ByBookName( Connection conn , String bookName ) throws  SQLException {
-        String sql = " SELECT * " +
-                "FROM SACH" +
-                "WHERE TENSH = ? " ;
-        PreparedStatement ps = conn.prepareStatement(sql ) ;
-        ps.setString(1,bookName);
-        try ( ResultSet rs = ps.executeQuery() ) {
-            while ( rs.next() ) {
-                Sach s = new Sach( ) ;
-                s.setMaSH(rs.getString("MASACH"));
-                s.setTenSH(rs.getString("TENSH"));
-                s.setTacGia(rs.getString("TACGIA"));
-                s.setLoai(rs.getString("LOAI"));
-                s.setTinhTrang(rs.getString("TINHTRANG"));
-                listSach.add(s) ;
-            }
-        }
-        return listSach;
-    }
-    public List<Sach> getListsSach_ByStatus( Connection conn , String status ) throws  SQLException {
-        String sql = " SELECT * " +
-                "FROM SACH" +
-                "WHERE TACGIA = ? " ;
-        PreparedStatement ps = conn.prepareStatement(sql ) ;
-        ps.setString(1,status);
-        try ( ResultSet rs = ps.executeQuery() ) {
-            while ( rs.next() ) {
-                Sach s = new Sach( ) ;
-                s.setMaSH(rs.getString("MASACH"));
-                s.setTenSH(rs.getString("TENSH"));
-                s.setTacGia(rs.getString("TACGIA"));
-                s.setLoai(rs.getString("LOAI"));
-                s.setTinhTrang(rs.getString("TINHTRANG"));
-                listSach.add(s) ;
-            }
-        }
-        return listSach;
-    }
-
-    public void  insertSach (Connection conn , String masach ,
+    public int   insertSach (Connection conn , String masach ,
                                String tensach , String tacgia ,
                                String loai , String  tinhtrang ) throws  SQLException {
         String sql = " INSERT INTO SACH (MASH , TENSH ," +
@@ -157,28 +157,26 @@ public class SachRepository {
         ps.setString(3,tacgia);
         ps.setString(4,loai);
         ps.setString(5,tinhtrang);
-        ps.executeUpdate() ;
-        System.out.println("Da them sach thanh cong ");
+        return ps.executeUpdate() ;
     }
 
-    public void deleteSach ( Connection conn , String masach ) throws SQLException {
+    public int  deleteSach ( Connection conn , String masach ) throws SQLException {
         String sql = " DELETE FROM Sach" +
                 "WHERE MASH = ?" ;
         PreparedStatement ps = conn.prepareStatement(sql ) ;
         ps.setString(1,masach ) ;
-        ps.executeUpdate() ;
-        System.out.println("Da xoa ma doc gia : "+masach);
+        return ps.executeUpdate() ;
+
     }
 
-    public void updateSach ( Connection conn , String tinhtrang , String masach ) throws SQLException {
+    public int  updateSach ( Connection conn , String tinhtrang , String masach ) throws SQLException {
         String sql = " UPDATE Sach " +
                 "SET TINHTRANG = ? " +
                 "WHERE MASH = ?" ;
         PreparedStatement ps = conn.prepareStatement(sql) ;
         ps.setString(1,tinhtrang);
         ps.setString(2,masach);
-        ps.executeUpdate()  ;
-        System.out.println("Da cap nhat thanh cong ! ");
+        return ps.executeUpdate()  ;
     }
     public void readAll_Sach() {
         System.out.println("\n--- DANH SACH SACH  ---");

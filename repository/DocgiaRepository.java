@@ -134,7 +134,7 @@ public class DocgiaRepository {
         return listDG ;
     }
 
-    public void  insertDocGia (Connection conn , String madg ,
+    public int insertDocGia (Connection conn , String madg ,
                                String ten , Date ngsinh , String phai ,
                                String diachi , int slMuon ) throws  SQLException {
         String sql = " INSERT INTO DOCGIA (MADG , TENDG ," +
@@ -146,28 +146,27 @@ public class DocgiaRepository {
         ps.setString(4,phai);
         ps.setString(5,diachi);
         ps.setInt(6,slMuon);
-        ps.executeUpdate() ;
-        System.out.println("Da cap nhat doc gia thanh cong ");
+        return ps.executeUpdate() ;
+
     }
 
-    public void deleteDocGia ( Connection conn , String madg ) throws SQLException {
+    public int deleteDocGia ( Connection conn , String madg ) throws SQLException {
         String sql = " DELETE FROM DOCGIA" +
                 "WHERE MADG = ?" ;
         PreparedStatement ps = conn.prepareStatement(sql ) ;
         ps.setString(1,madg ) ;
-        ps.executeUpdate() ;
-        System.out.println("Da xoa ma doc gia : "+madg);
+        return ps.executeUpdate() ;
     }
 
-    public void updateDocGia ( Connection conn , int slmuon , String madg ) throws SQLException {
+    public int  updateDocGia ( Connection conn , int slmuon , String madg ) throws SQLException {
         String sql = " UPDATE DOCGIA " +
                 "SET SoLanMuon = ? " +
                 "WHERE MADG = ?" ;
         PreparedStatement ps = conn.prepareStatement(sql) ;
         ps.setInt(1,slmuon);
         ps.setString(2,madg);
-        ps.executeUpdate()  ;
-        System.out.println("Da cap nhat thanh cong ! ");
+        return ps.executeUpdate()  ;
+
     }
     public void readAll_DocGia() {
         System.out.println("\n--- DANH SACH DOC GIA  ---");
