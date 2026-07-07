@@ -14,7 +14,7 @@ public class MuonsachRepository {
     public MuonsachRepository () { 
         listMS = new ArrayList<>() ; 
     }
-    
+    //Hiển thị danh sách mượn sách
     public List<MuonSach> getAllMuonSach (Connection conn ) throws SQLException {
         String sql = " SELECT * FROM MuonSach " ;
         PreparedStatement ps = conn.prepareStatement(sql ) ;
@@ -31,7 +31,7 @@ public class MuonsachRepository {
         }
         return listMS ;
     }
-
+    // Cập nhật mượn sách ( quá hạn , ngày trả )
     public int updateMuonsach (Connection conn , String madg , String mash
     , Date ngtra , String quahan ) throws SQLException {
         String sql = "UPDATE FROM MUONSACH " +
@@ -47,7 +47,21 @@ public class MuonsachRepository {
 
         return ps.executeUpdate() ;
     }
+    // Thêm mới một giao dịch mượn sách
+    public int insertMuonsach (Connection conn , String madg , String mash , Date ngmuon
+            , Date ngtra , String quahan ) throws SQLException {
+        String sql =" INSERT INTO MUONSACH ( MADG , MASH , NGAYMUON , NGAYTRA , QuaHan ) " +
+                "VALUES (?,?,?,?,?)";
+        PreparedStatement ps = conn.prepareStatement(sql ) ;
+        ps.setString(1,madg);
+        ps.setString(2,mash);
+        ps.setDate(3,ngmuon);
+        ps.setDate(4,ngtra);
+        ps.setString(5,quahan);
 
+        return ps.executeUpdate() ;
+    }
+    // Xóa giao dịch mươnj sách
     public int deleteMuonsach ( Connection conn , String madg , String mash ) throws SQLException {
         String sql = "DELETE FROM MUONSACH " +
                 "WHERE MADG = ? " +
@@ -57,7 +71,8 @@ public class MuonsachRepository {
         ps.setString(2,mash);
         return ps.executeUpdate() ;
     }
-     public List<MuonSach> getMuonSach_ByMaDG_MaSH ( Connection conn  ,  String madg , String mash  ) throws SQLException {
+    // Lấy giao dịch theo mã độc giã và mã sách
+    public MuonSach getMuonSach_ByMaDG_MaSH ( Connection conn  , String madg , String mash  ) throws SQLException {
         String sql = "SELECT * " +
                "FROM MuonSach " +
                 "WHERE MADG =?" +
@@ -73,12 +88,12 @@ public class MuonsachRepository {
                 ms.setNgayMuon(rs.getDate("NGAYMUON"));
                 ms.setNgayTra(rs.getDate("NGAYTRA"));
                 ms.setQuaHan(rs.getString("QUAHAN"));
-                listMS.add(ms) ;
+                return ms ;
             }
         }
-        return listMS ;
+        return null ;
     }
-
+    // Lọc mượn sách trong năm ?
     public List<MuonSach> getListMuonSach_in_Year ( Connection conn , Date year  ) throws  SQLException {
         String sql = " SELECT * " +
                 "FROM MuonSach" +
@@ -98,22 +113,21 @@ public class MuonsachRepository {
         }
         return listMS;
     }
-
-    public boolean checkExists_Mams ( Connection conn , String mams ) throws  SQLException {
-        boolean check = false ;
+    // Kiểm tra mã mượn sách tồn tại
+    public boolean checkExists_MaMuonsach ( Connection conn , String mash  ) throws  SQLException {
         String sql = " SELECT 1 " +
                 "FROM MuonSach" +
-                "WHERE MAms = ? " ;
+                "WHERE MASH = ? " ;
         PreparedStatement ps = conn.prepareStatement(sql) ;
-        ps.setString(1,mams );
+        ps.setString(1,mash );
         try ( ResultSet rs = ps.executeQuery()) {
             if ( rs.next()) {
-                check = true;
-                System.out.println(" Ton tai ma doc gia trong du lieu ");
+                return true ;
             }
         }
-        return check ;
+        return false  ;
     }
+
 
     public void readAll_MuonSach() {
         System.out.println("\n--- DANH SACH MUON SACH  ---");

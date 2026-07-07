@@ -60,5 +60,19 @@ public class DTORepository {
         }
         return listdto ;
     }
+    public boolean borrowSach ( Connection conn , String mash ) throws SQLException {
+        String sql = " SELECT * " +
+                "FROM MUONSACH MS " +
+                "JOIN SACH S ON S.MASH = MS.MASH" +
+                "WHERE S.MASH = ?" ;
+        PreparedStatement ps = conn .prepareStatement(sql) ;
+        ps.setString(1,mash);
+        try ( ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return true;
+            }
+        }
+        return false ;
+    }
 
 }

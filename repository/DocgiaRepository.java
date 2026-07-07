@@ -18,7 +18,7 @@ public class DocgiaRepository {
     public DocgiaRepository () {
         listDG = new ArrayList<>() ;
     }
-
+    // Lấy danh sách độc giả
     public List <DocGia> getAllDocGia (Connection conn ) throws SQLException {
         String sql = " SELECT * FROM DOCGIA " ;
         PreparedStatement ps = conn.prepareStatement(sql ) ;
@@ -36,6 +36,7 @@ public class DocgiaRepository {
         }
         return listDG ;
     }
+    // Lấy độc giả theo mã độc giả
     public DocGia getOneDocGia ( Connection conn  ,  String madg ) throws SQLException {
         String sql = "SELECT * " +
                 "FROM DOCGIA " +
@@ -56,7 +57,7 @@ public class DocgiaRepository {
         }
         return null ;
     }
-
+    // Lấy danh sách độc giả theo vị trí
     public List<DocGia> getListDG_in_Location( Connection conn , String diachi ) throws  SQLException {
         String sql = " SELECT * " +
                 "FROM DOCGIA" +
@@ -75,9 +76,8 @@ public class DocgiaRepository {
         }
         return listDG;
     }
-
+    // Kiểm tra tồn tại mã độc giả
     public boolean checkExists_MaDG ( Connection conn , String madg ) throws  SQLException {
-        boolean check = false ;
         String sql = " SELECT 1 " +
                 "FROM DOCGIA" +
                 "WHERE MADG = ? " ;
@@ -85,13 +85,12 @@ public class DocgiaRepository {
         ps.setString(1,madg );
         try ( ResultSet rs = ps.executeQuery()) {
             if ( rs.next()) {
-                check = true;
-                System.out.println(" Ton tai ma doc gia trong du lieu ");
+                return true ;
             }
         }
-        return check ;
+        return false ;
     }
-
+    // Tìm độc giả theo tên
     public DocGia getOneDG_ByName ( Connection conn , String name ) throws SQLException {
         String sql  = " SELECT *" +
                 "FROM DOCGIA" +
@@ -112,7 +111,7 @@ public class DocgiaRepository {
             return null ;
         }
     }
-
+    // Lọc độc giả theo giới tính
     public List <DocGia> getDocGia_By_Sex ( Connection conn , String sex ) throws  SQLException {
         String sql = " SELECT * " +
                 "FROM DOCGIA " +
@@ -133,7 +132,7 @@ public class DocgiaRepository {
         }
         return listDG ;
     }
-
+    // Thêm độc giả mới
     public int insertDocGia (Connection conn , String madg ,
                                String ten , Date ngsinh , String phai ,
                                String diachi , int slMuon ) throws  SQLException {
@@ -149,7 +148,7 @@ public class DocgiaRepository {
         return ps.executeUpdate() ;
 
     }
-
+    // Xóa độc giả
     public int deleteDocGia ( Connection conn , String madg ) throws SQLException {
         String sql = " DELETE FROM DOCGIA" +
                 "WHERE MADG = ?" ;
@@ -157,7 +156,7 @@ public class DocgiaRepository {
         ps.setString(1,madg ) ;
         return ps.executeUpdate() ;
     }
-
+    // Cập nhật thông tin cho độc giả
     public int  updateDocGia ( Connection conn , int slmuon , String madg ) throws SQLException {
         String sql = " UPDATE DOCGIA " +
                 "SET SoLanMuon = ? " +

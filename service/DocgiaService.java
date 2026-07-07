@@ -1,6 +1,7 @@
 package com.example.demo.SpringBoot__Core.miniQL_ThuVien.service;
 
 import com.example.demo.SpringBoot__Core.miniQL_ThuVien.entity.DocGia;
+import com.example.demo.SpringBoot__Core.miniQL_ThuVien.entity.Sach;
 import com.example.demo.SpringBoot__Core.miniQL_ThuVien.repository.DocgiaRepository;
 import org.hibernate.annotations.processing.SQL;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,15 +31,10 @@ public class DocgiaService {
         if (madg == null || madg.trim().isEmpty()) {
             throw new IllegalArgumentException("Mã độc giả tìm kiếm không được để trống!");
         }
-
-        // 2. Gọi xuống tầng Repo để lấy dữ liệu
         DocGia dg = docgiaRepository.getOneDocGia(conn, madg);
-
-        // 3. (Tùy chọn) Xử lý logic kiểm tra kết quả trả về
         if (dg == null) {
             throw new RuntimeException("Không tìm thấy độc giả nào có mã: " + madg);
         }
-
         return dg;
     }
 
@@ -55,38 +51,60 @@ public class DocgiaService {
 
     // Lấy danh sach độc giả theo vị trí
     public List<DocGia> danhsachDocGia_in ( Connection conn , String diaChi) throws SQLException {
-        List <DocGia> getAllDG = docgiaRepository.getAllDocGia(conn) ;
+        if ( diaChi == null || diaChi.trim().isEmpty()) {
+            throw new IllegalArgumentException("Địa chỉ không được để trống ");
+        }
+        try {
+            List<DocGia> getAllDG = docgiaRepository.getListDG_in_Location(conn , diaChi);
+            List<DocGia> result = new ArrayList<>();
+            for (DocGia dg : getAllDG) {
+                if (diaChi.equalsIgnoreCase(dg.getDiaChi())) {
+                    result.add(dg);
+                }
+            }
+            if (result.isEmpty()) {
+                System.out.println("Hien khong co danh sach doc gia o dia chi " + diaChi + " trong du lieu");
+            }
+            return result;
+        }catch (SQLException e ) {
+            System.err.println("Loi xu li nghiep vu "+e.getMessage());
+            return new ArrayList<>() ;
+        }
+    }
+    // Lấy danh sách độc giả theo gới tính
+    public List<DocGia> danhsachDocGia_sex ( Connection conn , String gioiTinh) throws SQLException {
+        if ( gioiTinh== null || gioiTinh.trim().isEmpty()) {
+            throw new IllegalArgumentException("Gioi tinh khong duoc de trong ");
+        }
+        List <DocGia> getAllDG = docgiaRepository.getDocGia_By_Sex(conn , gioiTinh) ;
         List<DocGia> result = new ArrayList<>() ;
         for ( DocGia dg  : getAllDG) {
-            if (diaChi.equalsIgnoreCase(dg.getDiaChi())) {
+            if (gioiTinh.equalsIgnoreCase(dg.getPhai())) {
                 result.add(dg) ;
             }
         }
-        return result ;
-    }
-    // Lấy danh sách độc giả tho gới tính
-    public List<DocGia> danhsachDocGia_sex ( Connection conn , String gioiTinh) throws SQLException {
-        List <DocGia> getAllDG = docgiaRepository.getAllDocGia(conn) ;
-        List<DocGia> result = new ArrayList<>() ;
-        for ( DocGia dg  : getAllDG) {
-            if (gioiTinh.equalsIgnoreCase(dg.getDiaChi())) {
-                result.add(dg) ;
-            }
+        if ( result.isEmpty()) {
+            System.out.println("Khong co gioi tinh " + gioiTinh + " trong du lieu ");
         }
         return result ;
     }
     // Lấy độc giã theo tên
-    public List<DocGia> danhsachDocGia_name ( Connection conn , String ten) throws SQLException {
-        List <DocGia> getAllDG = docgiaRepository.getAllDocGia(conn) ;
-        List<DocGia> result = new ArrayList<>() ;
-        for ( DocGia dg  : getAllDG) {
-            if (ten.equalsIgnoreCase(dg.getDiaChi())) {
-                result.add(dg) ;
-            }
+    public DocGia DocGia_name ( Connection conn , String ten) throws SQLException {
+        if (ten == null || ten.trim().isEmpty()) {
+            throw new IllegalArgumentException("Ten khong duoc de trong ");
         }
-        return result ;
-    }
 
+        try {
+            DocGia dg = docgiaRepository.getOneDG_ByName(conn , ten ) ;
+            if ( dg == null ) {
+                System.out.println("Hiện tại không có doc gia có ten: " + ten + " trong thư viện");
+            }
+            return dg ;
+        } catch (SQLException e) {
+            System.err.println("Lỗi xử lý nghiệp vụ: " + e.getMessage());
+            return null;
+        }
+    }
     public void insertLogicDocGia(Connection conn, String madg, String tendg,
                              Date ngsinh, String phai, String diachi, int slMuon) throws SQLException {
 
@@ -97,10 +115,14 @@ public class DocgiaService {
         if (tendg == null || tendg.trim().isEmpty()) {
             throw new IllegalArgumentException("Tên độc giả không được để trống!");
         }
+        if ( ngsinh == null ) {
+            throw new IllegalArgumentException("Ngay sinh khong duoc de trong ");
+        }
+        madg = madg.trim().toUpperCase() ;
+        if (docgiaRepository.checkExists_MaDG(conn , madg )) {
+            throw new RuntimeException("Ma doc gia da ton tai trong he thong ") ;
 
-        // 2. Gọi tầng Repo để thực hiện insert
-        // Vì 'conn' được truyền từ ngoài vào làm tham số, bạn KHÔNG CẦN dùng 'try ()' ở đây để đóng nó.
-        // Việc đóng 'conn' sẽ do nơi tạo ra nó (ví dụ: Controller hoặc Main) chịu trách nhiệm.
+        }
         try {
             // Giả sử đối tượng repo của bạn tên là docGiaRepo
             int result = docgiaRepository.insertDocGia(conn, madg, tendg, ngsinh, phai, diachi, slMuon);
@@ -121,6 +143,11 @@ public class DocgiaService {
         if ( madg == null || madg.trim().isEmpty()) {
             throw new IllegalArgumentException("Ma doc gia khong duoc de trong ");
         }
+        madg = madg.trim().toUpperCase() ;
+        if (docgiaRepository.checkExists_MaDG(conn , madg )==false) {
+            throw new RuntimeException("Ma doc gia khong co trong he thong ");
+        }
+
         try {
             int result = docgiaRepository.deleteDocGia(conn , madg) ;
 
@@ -141,6 +168,11 @@ public class DocgiaService {
         if ( madg == null || madg.trim().isEmpty()) {
             throw new IllegalArgumentException("Ma doc gia khong duoc de trong ");
         }
+        madg = madg.trim().toUpperCase() ;
+        if (docgiaRepository.checkExists_MaDG(conn , madg )== false) {
+            throw new RuntimeException("Ma doc gia khong ton tai ");
+        }
+
         try {
             int result = docgiaRepository.updateDocGia(conn, slmuon, madg);
             if (result > 0) {
